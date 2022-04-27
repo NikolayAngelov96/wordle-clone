@@ -1,0 +1,11 @@
+.row {
+    text-align: center;
+}
+
+.cell {
+    border: 1px solid black;
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    margin-right: 6px;
+}
