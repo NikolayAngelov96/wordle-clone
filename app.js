@@ -21,11 +21,12 @@ createBoard();
 function createBoard() {
     for (let i = 0; i < 6; i++) {
         const row = document.createElement('div');
-        row.classList.add('row');
+        row.className = 'row';
 
         for (let j = 0; j < 5; j++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
+            cell.textContent = '';
 
             row.appendChild(cell);
         }
@@ -35,12 +36,8 @@ function createBoard() {
 }
 
 function handleKeydown(e) {
-    const key = e.key;
-    if (e.ctrlKey || e.metaKey || e.altKey) {
-        return
-    }
-    let letter = key.toLowerCase();
-
+    // handle shift, alt, ctrl keys
+    let letter = e.key.toLowerCase();
     if (letter === 'enter') {
 
         if (currentAttempt.length < 5) {
@@ -52,10 +49,8 @@ function handleKeydown(e) {
             currentAttempt = '';
         }
     } else if (letter === 'backspace') {
-        console.log('backspace pressed');
+        currentAttempt = currentAttempt.slice(0, currentAttempt.length - 1);
     } else {
-        
-        console.log(letter);
         if (currentAttempt.length < 5) {
             currentAttempt += letter;
         }
@@ -70,12 +65,18 @@ function updateBoard() {
         drawAttempt(row, attempt)
         row = row.nextSibling;
     }
+    drawAttempt(row, currentAttempt)
 }
 
 function drawAttempt(row, attempt) {
     for (let i = 0; i < 5; i++) {
         let cell = row.children[i];
-        cell.textContent = attempt[i].toUpperCase();
+        if (attempt[i] !== undefined) {
+            cell.textContent = attempt[i].toUpperCase();
+        } else {
+            // hack
+            cell.innerHTML = '<div style="opacity: 0">X</div>';
+        }
 
     }
 }
