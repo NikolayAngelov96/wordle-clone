@@ -8,11 +8,18 @@ const wordList = [
     'water'
 ]
 
+const colors = {
+    lightgray: '#3a3a3c',
+    yellow: '#b59f3b',
+    green: '#538d4e',
+    darkgray: '#121213'
+}
+
 let randomIndex = Math.floor(Math.random() * wordList.length);
 const secretWord = wordList[randomIndex];
+
 let currentAttempt = '';
 const attempts = [];
-
 
 window.addEventListener('keydown', handleKeydown)
 
@@ -36,7 +43,10 @@ function createBoard() {
 }
 
 function handleKeydown(e) {
-    // handle shift, alt, ctrl keys
+    if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
+        return;
+    }
+
     let letter = e.key.toLowerCase();
     if (letter === 'enter') {
 
@@ -48,6 +58,8 @@ function handleKeydown(e) {
             attempts.push(currentAttempt);
             currentAttempt = '';
         }
+
+        // when attemprs.length == 6 => end game
     } else if (letter === 'backspace') {
         currentAttempt = currentAttempt.slice(0, currentAttempt.length - 1);
     } else {
@@ -62,21 +74,38 @@ function handleKeydown(e) {
 function updateBoard() {
     let row = root.firstChild;
     for (const attempt of attempts) {
-        drawAttempt(row, attempt)
+        drawAttempt(row, attempt, false)
         row = row.nextSibling;
     }
-    drawAttempt(row, currentAttempt)
+    drawAttempt(row, currentAttempt, true)
 }
 
-function drawAttempt(row, attempt) {
+function drawAttempt(row, attempt, isCurrent) {
     for (let i = 0; i < 5; i++) {
         let cell = row.children[i];
         if (attempt[i] !== undefined) {
             cell.textContent = attempt[i].toUpperCase();
+            if (isCurrent) {
+                cell.style.backgroundColor = colors.darkgray;
+            } else {
+                cell.style.backgroundColor = getColors(attempt, i);
+            }
         } else {
             // hack
             cell.innerHTML = '<div style="opacity: 0">X</div>';
         }
-
     }
+}
+
+function getColors(attempt, index) {
+
+    if (secretWord[index] === attempt[index]) {
+        return colors.green;
+    }
+
+    if (secretWord.includes(attempt[index])) {
+        return colors.yellow;
+    }
+
+    return colors.lightgray;
 }

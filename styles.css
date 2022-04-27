@@ -10,6 +10,11 @@ body {
     max-height: 100vh;
 }
 
+.title {
+    color: white;
+    text-align: center;
+}
+
 #root {
     margin-top: 2rem;
     display: grid;
