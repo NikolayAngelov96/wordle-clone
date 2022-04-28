@@ -33,6 +33,7 @@ body {
     height: 60px;
 
     color: white;
+    text-transform: uppercase;
 
     margin-right: 6px;
 
@@ -43,4 +44,20 @@ body {
 
     font-size: 2.5rem;
     font-weight: bold;
+}
+
+.notification {
+    color: #121213;
+    font-size: 1.5rem;
+    padding: 1rem;
+    background-color: white;
+    border-radius: 4px;
+
+    display: none;
+
+    position: absolute;
+    top: 10%;
+    left: 50%;
+
+    transform: translateX(-50%);
 }

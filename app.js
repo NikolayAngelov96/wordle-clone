@@ -1,4 +1,5 @@
 const root = document.getElementById('root');
+const notification = document.querySelector('.notification');
 
 const wordList = [
     'pizza',
@@ -43,7 +44,7 @@ function createBoard() {
 }
 
 function handleKeydown(e) {
-    if(e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
+    if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
         return;
     }
 
@@ -59,7 +60,10 @@ function handleKeydown(e) {
             currentAttempt = '';
         }
 
-        // when attemprs.length == 6 => end game
+        if (attempts.length === 6 && currentAttempt !== secretWord) {
+            notify(false);
+        }
+
     } else if (letter === 'backspace') {
         currentAttempt = currentAttempt.slice(0, currentAttempt.length - 1);
     } else {
@@ -76,25 +80,32 @@ function updateBoard() {
     for (const attempt of attempts) {
         drawAttempt(row, attempt, false)
         row = row.nextSibling;
+        if (attempt === secretWord) {
+            notify(true);
+        }
     }
     drawAttempt(row, currentAttempt, true)
+
 }
 
 function drawAttempt(row, attempt, isCurrent) {
     for (let i = 0; i < 5; i++) {
         let cell = row.children[i];
         if (attempt[i] !== undefined) {
-            cell.textContent = attempt[i].toUpperCase();
+            cell.textContent = attempt[i];
             if (isCurrent) {
                 cell.style.backgroundColor = colors.darkgray;
             } else {
                 cell.style.backgroundColor = getColors(attempt, i);
             }
+
         } else {
             // hack
             cell.innerHTML = '<div style="opacity: 0">X</div>';
         }
+
     }
+
 }
 
 function getColors(attempt, index) {
@@ -108,4 +119,19 @@ function getColors(attempt, index) {
     }
 
     return colors.lightgray;
+}
+
+function notify(hasWon) {
+    notification.style.display = 'block';
+
+    if (hasWon) {
+        notification.textContent = 'Magnificent!'
+    } else {
+        notification.textContent = secretWord;
+    }
+    
+    setTimeout(() => {
+        notification.style.display = '';
+    }, 3000)
+
 }
