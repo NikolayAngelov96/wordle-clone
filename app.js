@@ -13,7 +13,8 @@ const colors = {
     lightgray: '#3a3a3c',
     yellow: '#b59f3b',
     green: '#538d4e',
-    darkgray: '#121213'
+    darkgray: '#121213',
+    borderGray: '#565758'
 }
 
 let randomIndex = Math.floor(Math.random() * wordList.length);
@@ -66,7 +67,7 @@ function handleKeydown(e) {
 
     } else if (letter === 'backspace') {
         currentAttempt = currentAttempt.slice(0, currentAttempt.length - 1);
-    } else {
+    } else if (/[a-z]/.test(letter)) {
         if (currentAttempt.length < 5) {
             currentAttempt += letter;
         }
@@ -93,6 +94,8 @@ function drawAttempt(row, attempt, isCurrent) {
         let cell = row.children[i];
         if (attempt[i] !== undefined) {
             cell.textContent = attempt[i];
+            setAnimationOnPress(cell);
+
             if (isCurrent) {
                 cell.style.backgroundColor = colors.darkgray;
             } else {
@@ -102,10 +105,26 @@ function drawAttempt(row, attempt, isCurrent) {
         } else {
             // hack
             cell.innerHTML = '<div style="opacity: 0">X</div>';
+            clearAnimationOnPress(cell);
+
         }
 
     }
 
+}
+
+function setAnimationOnPress(cell) {
+    cell.style.animationName = 'press';
+    cell.style.animationDuration = '100ms';
+    cell.style.animationTimingFunction = 'ease-in';
+    cell.style.borderColor = colors.borderGray;
+}
+
+function clearAnimationOnPress(cell) {
+    cell.style.animationName = '';
+    cell.style.animationDuration = '';
+    cell.style.animationTimingFunction = '';
+    cell.style.borderColor = '';
 }
 
 function getColors(attempt, index) {
@@ -129,7 +148,7 @@ function notify(hasWon) {
     } else {
         notification.textContent = secretWord;
     }
-    
+
     setTimeout(() => {
         notification.style.display = '';
     }, 3000)
