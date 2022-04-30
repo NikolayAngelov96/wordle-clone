@@ -1,5 +1,6 @@
 const root = document.getElementById('root');
 const notification = document.querySelector('.notification');
+const endScreen = document.querySelector('.end-screen');
 
 const wordList = [
     'pizza',
@@ -21,11 +22,18 @@ let randomIndex = Math.floor(Math.random() * wordList.length);
 const secretWord = wordList[randomIndex];
 
 let currentAttempt = '';
-const attempts = [];
+let attempts = [];
 
-window.addEventListener('keydown', handleKeydown)
+startGame();
 
-createBoard();
+function startGame() {
+    window.addEventListener('keydown', handleKeydown);
+    createBoard();
+
+    currentAttempt = '';
+    attempts = [];
+
+}
 
 function createBoard() {
     for (let i = 0; i < 6; i++) {
@@ -83,6 +91,7 @@ function updateBoard() {
         row = row.nextSibling;
         if (attempt === secretWord) {
             notify(true);
+
         }
     }
     drawAttempt(row, currentAttempt, true)
@@ -151,6 +160,18 @@ function notify(hasWon) {
 
     setTimeout(() => {
         notification.style.display = '';
-    }, 3000)
+        endGame();
+    }, 2500)
 
+}
+
+function endGame() {
+    endScreen.style.display = 'block';
+    window.removeEventListener('keydown', handleKeydown)
+    endScreen.querySelector('.play').addEventListener('click', () => {
+        root.innerHTML = '';
+        endScreen.style.display = 'none';
+
+        startGame();
+    });
 }
