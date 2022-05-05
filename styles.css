@@ -80,13 +80,6 @@ body {
     transform: translate(50%, -50%)
 }
 
-.won, .lost {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
 .play {
     margin-top: 1rem;
     padding: 1rem 2rem;

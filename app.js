@@ -155,19 +155,21 @@ function notify(hasWon) {
     if (hasWon) {
         notification.textContent = 'Magnificent!'
     } else {
-        notification.textContent = secretWord;
+        notification.textContent = secretWord.toUpperCase();
     }
 
     setTimeout(() => {
         notification.style.display = '';
-        endGame();
+        endGame(hasWon);
     }, 2500)
 
 }
 
-function endGame() {
+function endGame(hasWon) {
     endScreen.style.display = 'block';
-    window.removeEventListener('keydown', handleKeydown)
+    endScreen.querySelector('.message').textContent = hasWon ? 'You WON' : 'Do you want to try again?'
+    window.removeEventListener('keydown', handleKeydown);
+
     endScreen.querySelector('.play').addEventListener('click', () => {
         root.innerHTML = '';
         endScreen.style.display = 'none';
