@@ -47,12 +47,7 @@ function createBoard() {
   }
 }
 
-function handleKeydown(e) {
-  if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
-    return;
-  }
-
-  let letter = e.key.toLowerCase();
+function handleLetterInput(letter) {
   if (letter === "enter") {
     if (currentAttempt.length < 5) {
       return;
@@ -66,7 +61,7 @@ function handleKeydown(e) {
     if (attempts.length === 6 && currentAttempt !== secretWord) {
       notify(false);
     }
-  } else if (letter === "backspace") {
+  } else if (letter === "del" || letter === "backspace") {
     currentAttempt = currentAttempt.slice(0, currentAttempt.length - 1);
   } else if (/[a-z]/.test(letter)) {
     if (currentAttempt.length < 5) {
@@ -74,6 +69,14 @@ function handleKeydown(e) {
     }
   }
   updateBoard();
+}
+
+function handleKeydown(e) {
+  if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) {
+    return;
+  }
+
+  handleLetterInput(e.key.toLowerCase());
 }
 
 function updateBoard() {
@@ -158,6 +161,7 @@ function endGame(hasWon) {
 
   endScreen.querySelector(".play").addEventListener("click", () => {
     root.innerHTML = "";
+    keyboardContainer.innerHTML = "";
     endScreen.style.display = "none";
 
     startGame();
@@ -168,11 +172,19 @@ function createKeyboard(keys) {
   const container = document.createElement("div");
   container.classList.add("keyboard-row");
 
+  function handleClickFromScreenKeyboard(e) {
+    let letter = e.target.textContent.toLowerCase();
+
+    handleLetterInput(letter);
+  }
+
   for (const key of keys) {
     const button = document.createElement("button");
     button.classList.add("letter");
     button.textContent = key;
     container.appendChild(button);
+
+    button.addEventListener("click", handleClickFromScreenKeyboard);
   }
 
   keyboardContainer.appendChild(container);
